@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+	
+    <PackageVersion>1.0.0.0</PackageVersion>
+	
+    <PackageId>MyFirstAnalyzer</PackageId>
+    <Description>My first Roslyn analyzer.</Description>
+    <PackageTags>analyzers</PackageTags>
+	
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="" />
+
+    <None Include="build/**" Pack="true" PackagePath="build" />
+    <None Include="buildMultiTargeting/**" Pack="true" PackagePath="buildMultiTargeting" />
+    <None Include="buildTransitive/**" Pack="true" PackagePath="buildTransitive" />
+    
+    <None Include="configuration/*.editorconfig" Pack="true" PackagePath="configuration" />
+
+    <None Include="$(MSBuildThisFileDirectory)\..\MyFirstAnalyzer\bin\$(Configuration)\netstandard2.0\MyFirstAnalyzer.dll" Pack="true" PackagePath="analyzers/dotnet/roslyn4.8/cs/" />
+    <None Include="$(MSBuildThisFileDirectory)\..\MyFirstAnalyzer.CodeFixers\bin\$(Configuration)\netstandard2.0\MyFirstAnalyzer.CodeFixes.dll" Pack="true" PackagePath="analyzers/dotnet/roslyn4.8/cs/" />
+  </ItemGroup>
+
+</Project>
