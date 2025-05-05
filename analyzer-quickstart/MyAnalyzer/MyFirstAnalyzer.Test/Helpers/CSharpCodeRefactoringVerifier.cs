@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Testing;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,19 +11,15 @@ namespace MyFirstAnalyzer.Helpers
         where TCodeRefactoring : CodeRefactoringProvider, new()
     {
         /// <inheritdoc cref="CodeRefactoringVerifier{TCodeRefactoring, TTest, TVerifier}.VerifyRefactoringAsync(string, string)"/>
-        public static async Task VerifyRefactoringAsync(string source, string fixedSource)
-        {
-            await VerifyRefactoringAsync(source, DiagnosticResult.EmptyDiagnosticResults, fixedSource);
-        }
+        public static async Task VerifyRefactoringAsync([StringSyntax(CSharpVerifierHelper.CSharpTestLanguage)] string source, [StringSyntax(CSharpVerifierHelper.CSharpTestLanguage)] string fixedSource) 
+            => await VerifyRefactoringAsync(source, DiagnosticResult.EmptyDiagnosticResults, fixedSource);
 
         /// <inheritdoc cref="CodeRefactoringVerifier{TCodeRefactoring, TTest, TVerifier}.VerifyRefactoringAsync(string, DiagnosticResult, string)"/>
-        public static async Task VerifyRefactoringAsync(string source, DiagnosticResult expected, string fixedSource)
-        {
-            await VerifyRefactoringAsync(source, new[] { expected }, fixedSource);
-        }
+        public static async Task VerifyRefactoringAsync([StringSyntax(CSharpVerifierHelper.CSharpTestLanguage)] string source, DiagnosticResult expected, [StringSyntax(CSharpVerifierHelper.CSharpTestLanguage)] string fixedSource) 
+            => await VerifyRefactoringAsync(source, new[] { expected }, fixedSource);
 
         /// <inheritdoc cref="CodeRefactoringVerifier{TCodeRefactoring, TTest, TVerifier}.VerifyRefactoringAsync(string, DiagnosticResult[], string)"/>
-        public static async Task VerifyRefactoringAsync(string source, DiagnosticResult[] expected, string fixedSource)
+        public static async Task VerifyRefactoringAsync([StringSyntax(CSharpVerifierHelper.CSharpTestLanguage)] string source, DiagnosticResult[] expected, [StringSyntax(CSharpVerifierHelper.CSharpTestLanguage)] string fixedSource)
         {
             var test = new Test
             {

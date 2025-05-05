@@ -7,18 +7,21 @@ namespace MyFirstAnalyzer.Helpers
     [TestClass]
     public class MyAnalyzerTests
     {
-        //No diagnostics expected to show up
+        /// <summary>
+        /// No diagnostics expected to show up.
+        /// </summary>
         [TestMethod]
-        public async Task TestMethod1()
+        public async Task Baseline()
         {
             var test = @"";
-
             await VerifyCS.VerifyAnalyzerAsync(test);
         }
 
-        //Diagnostic and CodeFix both triggered and checked for
+        /// <summary>
+        /// Diagnostic and CodeFix both triggered and checked for
+        /// </summary>
         [TestMethod]
-        public async Task TestMethod2()
+        public async Task Detect_And_Fix()
         {
             var test = @"
     using System;

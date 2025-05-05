@@ -2,11 +2,15 @@
 using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Testing;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MyFirstAnalyzer.Helpers
 {
+    /// <summary>
+    /// Type à utiliser lorsque vous codez un simple analyseur (sans codefix).
+    /// </summary>
     public static class CSharpAnalyzerVerifier<TAnalyzer>
         where TAnalyzer : DiagnosticAnalyzer, new()
     {
@@ -23,7 +27,7 @@ namespace MyFirstAnalyzer.Helpers
             => CSharpAnalyzerVerifier<TAnalyzer, DefaultVerifier>.Diagnostic(descriptor);
 
         /// <inheritdoc cref="AnalyzerVerifier{TAnalyzer, TTest, TVerifier}.VerifyAnalyzerAsync(string, DiagnosticResult[])"/>
-        public static async Task VerifyAnalyzerAsync(string source, params DiagnosticResult[] expected)
+        public static async Task VerifyAnalyzerAsync([StringSyntax(CSharpVerifierHelper.CSharpTestLanguage)] string source, params DiagnosticResult[] expected)
         {
             var test = new Test
             {

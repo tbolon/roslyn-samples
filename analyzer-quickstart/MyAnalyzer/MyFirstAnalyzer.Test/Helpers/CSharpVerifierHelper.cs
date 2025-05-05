@@ -8,6 +8,11 @@ namespace MyFirstAnalyzer.Helpers
     internal static class CSharpVerifierHelper
     {
         /// <summary>
+        /// Language utilisé pour l'attribut StringSyntax pour permettre la coloration syntaxique
+        /// </summary>
+        public const string CSharpTestLanguage = "C#-Test";
+
+        /// <summary>
         /// By default, the compiler reports diagnostics for nullable reference types at
         /// <see cref="DiagnosticSeverity.Warning"/>, and the analyzer test framework defaults to only validating
         /// diagnostics at <see cref="DiagnosticSeverity.Error"/>. This map contains all compiler diagnostic IDs
@@ -18,7 +23,7 @@ namespace MyFirstAnalyzer.Helpers
 
         private static ImmutableDictionary<string, ReportDiagnostic> GetNullableWarningsFromCompiler()
         {
-            string[] args = { "/warnaserror:nullable" };
+            string[] args = ["/warnaserror:nullable"];
             var commandLineArguments = CSharpCommandLineParser.Default.Parse(args, baseDirectory: Environment.CurrentDirectory, sdkDirectory: Environment.CurrentDirectory);
             var nullableWarnings = commandLineArguments.CompilationOptions.SpecificDiagnosticOptions;
 
