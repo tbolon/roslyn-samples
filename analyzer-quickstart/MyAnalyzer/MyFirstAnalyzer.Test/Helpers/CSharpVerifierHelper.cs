@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using System;
 using System.Collections.Immutable;
 
-namespace Analyzer1.Helpers
+namespace MyFirstAnalyzer.Helpers
 {
     internal static class CSharpVerifierHelper
     {

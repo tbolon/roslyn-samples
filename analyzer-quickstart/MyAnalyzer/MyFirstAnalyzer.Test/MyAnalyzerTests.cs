@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Threading.Tasks;
 using VerifyCS = MyFirstAnalyzer.Helpers.CSharpCodeFixVerifier<MyFirstAnalyzer.MyAnalyzer, MyFirstAnalyzer.MyAnalyzerCodeFixProvider>;
 
 namespace MyFirstAnalyzer.Helpers
@@ -50,7 +50,7 @@ namespace MyFirstAnalyzer.Helpers
         }
     }";
 
-            var expected = VerifyCS.Diagnostic(Analyzer1.Analyzer1Analyzer.DiagnosticId).WithLocation(0).WithArguments("TypeName");
+            var expected = VerifyCS.Diagnostic(MyAnalyzer.DiagnosticId).WithLocation(0).WithArguments("TypeName");
             await VerifyCS.VerifyCodeFixAsync(test, expected, fixtest);
         }
     }
