@@ -13,7 +13,7 @@ namespace MyFirstAnalyzer.Helpers
         [TestMethod]
         public async Task Baseline()
         {
-            var test = @"";
+            var test = "";
             await VerifyCS.VerifyAnalyzerAsync(test);
         }
 
