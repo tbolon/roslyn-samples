@@ -8,8 +8,11 @@ namespace ClassLibrary1
 {
     public class Class1
     {
+        // obsolete: test
         public static void Test()
         {
+            // OBSOLETE 14/05/2025
+            // ce code doit être supprimé
             var x = "Hello World!";
             Console.WriteLine(x);
         }

@@ -4,7 +4,11 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Operations;
 using static System.Console;
 
-// taken from https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/get-started/syntax-analysis
+// ***********************
+//
+// Syntax Model
+// https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/get-started/syntax-analysis
+//
 
 const string programText =
 @"using System;
@@ -18,21 +22,13 @@ namespace HelloWorld
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(""Hello, World!"");
+            Console.WriteLine(42);
         }
     }
 }";
 
 SyntaxTree tree = CSharpSyntaxTree.ParseText(programText);
 CompilationUnitSyntax root = tree.GetCompilationUnitRoot();
-
-// create a compilation object
-var compilation = CSharpCompilation
-    .Create("HelloWorld")
-    .AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location)) // mscorlib
-    .AddSyntaxTrees(tree);
-
-var model = compilation.GetSemanticModel(tree);
 
 // root node
 WriteLine($"The tree is a {root.Kind()} node.");
@@ -56,9 +52,6 @@ WriteLine($"The first member is a {programDeclaration.Members[0].Kind()}.");
 
 var mainDeclaration = (MethodDeclarationSyntax)programDeclaration.Members[0];
 
-// main method
-var op = (IMethodBodyOperation?)model.GetOperation(mainDeclaration);
-
 WriteLine($"The return type of the {mainDeclaration.Identifier} method is {mainDeclaration.ReturnType}.");
 WriteLine($"The method has {mainDeclaration.ParameterList.Parameters.Count} parameters.");
 foreach (ParameterSyntax item in mainDeclaration.ParameterList.Parameters)
@@ -69,3 +62,54 @@ WriteLine(mainDeclaration.Body?.ToFullString());
 // args parameter
 var argsParameter = mainDeclaration.ParameterList.Parameters[0];
 
+// ***********************
+//
+// IOperation Syntax Model (language agnostic)
+// Useful in analyzers
+//
+
+// create a compilation object (necessary for the semantic model)
+var compilation = CSharpCompilation
+    .Create("HelloWorld")
+    .AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location)) // mscorlib
+    .AddSyntaxTrees(tree);
+
+// get the semantic model
+var model = compilation.GetSemanticModel(tree);
+
+// main method IOperation
+var methodBodyOp = (IMethodBodyOperation?)model.GetOperation(mainDeclaration);
+var blockOp = methodBodyOp?.BlockBody;
+
+// ***********************
+//
+// Semantic model
+// https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/get-started/semantic-analysis
+//
+
+// find the "Hello World!" literal in the main method
+LiteralExpressionSyntax helloWorldString = mainDeclaration.DescendantNodes().OfType<LiteralExpressionSyntax>().Single();
+TypeInfo literalInfo = model.GetTypeInfo(helloWorldString);
+
+// get the string type
+var typeSymbol = (INamedTypeSymbol?)literalInfo.Type;
+
+// get all members
+var allMembers = typeSymbol?.GetMembers();
+
+// get all methods
+var methods = allMembers?.OfType<IMethodSymbol>();
+
+// all methods which returns a string
+var publicStringReturningMethods = methods?
+    .Where(m => SymbolEqualityComparer.Default.Equals(m.ReturnType, typeSymbol) &&
+    m.DeclaredAccessibility == Accessibility.Public);
+
+// remove overloads
+var distinctMethods = publicStringReturningMethods?.Select(m => m.Name).Distinct();
+
+WriteLine($"Methods from the type {typeSymbol?.Name} used as a parameter");
+foreach (string name in distinctMethods ?? Enumerable.Empty<string>())
+{
+    WriteLine(name);
+}
