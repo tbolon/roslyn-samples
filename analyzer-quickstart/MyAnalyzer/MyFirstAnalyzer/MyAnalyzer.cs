@@ -24,6 +24,7 @@ namespace MyFirstAnalyzer
             context.EnableConcurrentExecution();
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 
+            // 👇 
             context.RegisterSymbolAction(AnalyzeSymbol, SymbolKind.NamedType);
         }
 		
