@@ -1,11 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
-using VerifyCS = MyFirstAnalyzer.Helpers.CSharpCodeFixVerifier<MyFirstAnalyzer.MyAnalyzer, MyFirstAnalyzer.MyAnalyzerCodeFixProvider>;
+using VerifyCS = MyFirstAnalyzer.Helpers.CSharpCodeFixVerifier<MyFirstAnalyzer.AllCapsAnalyzer, MyFirstAnalyzer.MyAnalyzerCodeFixProvider>;
 
 namespace MyFirstAnalyzer.Helpers
 {
     [TestClass]
-    public class MyAnalyzerTests
+    public class AllCapsAnalyzerTests
     {
         /// <summary>
         /// No diagnostics expected to show up.
@@ -53,7 +53,7 @@ namespace MyFirstAnalyzer.Helpers
         }
     }";
 
-            var expected = VerifyCS.Diagnostic(MyAnalyzer.DiagnosticId).WithLocation(0).WithArguments("TypeName");
+            var expected = VerifyCS.Diagnostic(AllCapsAnalyzer.DiagnosticId).WithLocation(0).WithArguments("TypeName");
             await VerifyCS.VerifyCodeFixAsync(test, expected, fixtest);
         }
     }

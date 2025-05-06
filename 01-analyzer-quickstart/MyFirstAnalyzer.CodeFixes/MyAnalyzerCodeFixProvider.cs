@@ -17,7 +17,7 @@ namespace MyFirstAnalyzer
     {
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
-            get { return ImmutableArray.Create(MyAnalyzer.DiagnosticId); }
+            get { return ImmutableArray.Create(AllCapsAnalyzer.DiagnosticId); }
         }
 
         public sealed override FixAllProvider GetFixAllProvider()

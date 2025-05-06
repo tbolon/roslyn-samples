@@ -24,11 +24,6 @@ namespace MyFirstAnalyzer
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="context"></param>
-        /// <expiration date="2024-25-10">This method is obsolete and will be removed in future versions.</expiration>
         public override void Initialize(AnalysisContext context)
         {
             context.EnableConcurrentExecution();

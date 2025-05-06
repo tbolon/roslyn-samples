@@ -6,7 +6,7 @@ using System.Linq;
 namespace MyFirstAnalyzer
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class MyAnalyzer : DiagnosticAnalyzer
+    public class AllCapsAnalyzer : DiagnosticAnalyzer
     {
         public const string DiagnosticId = "MF01";
 
