@@ -21,6 +21,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassLibrary1", "00-roslyn\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompilerApp1", "00-roslyn\CompilerApp1\CompilerApp1.csproj", "{35BC3DD3-2F1D-4038-943E-CFDEDD537AF7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyFirstAnalyzer.App", "01-analyzer-quickstart\MyFirstAnalyzer.App\MyFirstAnalyzer.App.csproj", "{4D8B707B-FD8C-4EA7-A42E-583E3A210D53}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "(solution)", "(solution)", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +62,10 @@ Global
 		{35BC3DD3-2F1D-4038-943E-CFDEDD537AF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35BC3DD3-2F1D-4038-943E-CFDEDD537AF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35BC3DD3-2F1D-4038-943E-CFDEDD537AF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D8B707B-FD8C-4EA7-A42E-583E3A210D53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D8B707B-FD8C-4EA7-A42E-583E3A210D53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D8B707B-FD8C-4EA7-A42E-583E3A210D53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D8B707B-FD8C-4EA7-A42E-583E3A210D53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +78,7 @@ Global
 		{76BC7016-EC92-EF58-806C-2806A4B9F122} = {96A96997-CB1D-F06B-5914-585769AFF7D0}
 		{1F6DBE03-C84E-45E3-8A16-E0F6105072DF} = {96A96997-CB1D-F06B-5914-585769AFF7D0}
 		{35BC3DD3-2F1D-4038-943E-CFDEDD537AF7} = {96A96997-CB1D-F06B-5914-585769AFF7D0}
+		{4D8B707B-FD8C-4EA7-A42E-583E3A210D53} = {979BD2E1-D422-4AE8-0F44-67CD12C47E0C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0AD3A3A2-6B76-4F64-860B-14B8DEB2CDB0}
