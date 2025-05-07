@@ -22,7 +22,7 @@ namespace HelloWorld
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(42);
+            Console.WriteLine(""Hello World!"");
         }
     }
 }";
@@ -62,6 +62,9 @@ WriteLine(mainDeclaration.Body?.ToFullString());
 // args parameter
 var argsParameter = mainDeclaration.ParameterList.Parameters[0];
 
+WriteLine("Press any key...");
+ReadKey();
+
 // ***********************
 //
 // IOperation Syntax Model (language agnostic)
@@ -71,7 +74,8 @@ var argsParameter = mainDeclaration.ParameterList.Parameters[0];
 // create a compilation object (necessary for the semantic model)
 var compilation = CSharpCompilation
     .Create("HelloWorld")
-    .AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location)) // mscorlib
+    .AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location)) // System.Private.CoreLib
+    .AddReferences(MetadataReference.CreateFromFile(typeof(Console).Assembly.Location)) // System.Console
     .AddSyntaxTrees(tree);
 
 // get the semantic model
@@ -79,7 +83,16 @@ var model = compilation.GetSemanticModel(tree);
 
 // main method IOperation
 var methodBodyOp = (IMethodBodyOperation?)model.GetOperation(mainDeclaration);
-var blockOp = methodBodyOp?.BlockBody;
+var blockOp = methodBodyOp!.BlockBody;
+
+WriteLine($"The main method block body has {blockOp?.Operations.Length} operations.");
+var invocationOp = blockOp.Descendants().OfType<IInvocationOperation>().First();
+
+WriteLine($"The method is {invocationOp.TargetMethod.Name} accepting {invocationOp.TargetMethod.Parameters.Length} parameter");
+WriteLine($"The first parameter is {invocationOp.TargetMethod.Parameters[0].Name} of type {invocationOp.TargetMethod.Parameters[0].Type}");
+
+WriteLine("Press any key...");
+ReadKey();
 
 // ***********************
 //
