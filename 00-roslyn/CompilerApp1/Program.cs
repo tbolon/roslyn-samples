@@ -67,8 +67,8 @@ ReadKey();
 
 // ***********************
 //
-// IOperation Syntax Model (language agnostic)
-// Useful in analyzers
+// Semantic model
+// https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/get-started/semantic-analysis
 //
 
 // create a compilation object (necessary for the semantic model)
@@ -80,25 +80,6 @@ var compilation = CSharpCompilation
 
 // get the semantic model
 var model = compilation.GetSemanticModel(tree);
-
-// main method IOperation
-var methodBodyOp = (IMethodBodyOperation?)model.GetOperation(mainDeclaration);
-var blockOp = methodBodyOp!.BlockBody;
-
-WriteLine($"The main method block body has {blockOp?.Operations.Length} operations.");
-var invocationOp = blockOp.Descendants().OfType<IInvocationOperation>().First();
-
-WriteLine($"The method is {invocationOp.TargetMethod.Name} accepting {invocationOp.TargetMethod.Parameters.Length} parameter");
-WriteLine($"The first parameter is {invocationOp.TargetMethod.Parameters[0].Name} of type {invocationOp.TargetMethod.Parameters[0].Type}");
-
-WriteLine("Press any key...");
-ReadKey();
-
-// ***********************
-//
-// Semantic model
-// https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/get-started/semantic-analysis
-//
 
 // find the "Hello World!" literal in the main method
 LiteralExpressionSyntax helloWorldString = mainDeclaration.DescendantNodes().OfType<LiteralExpressionSyntax>().Single();
@@ -126,3 +107,23 @@ foreach (string name in distinctMethods ?? Enumerable.Empty<string>())
 {
     WriteLine(name);
 }
+
+WriteLine("Press any key...");
+ReadKey();
+
+// ***********************
+//
+// IOperation Syntax Model (language agnostic)
+// Useful in analyzers
+//
+
+
+// main method IOperation
+var methodBodyOp = (IMethodBodyOperation?)model.GetOperation(mainDeclaration);
+var blockOp = methodBodyOp!.BlockBody;
+
+WriteLine($"The main method block body has {blockOp?.Operations.Length} operations.");
+var invocationOp = blockOp.Descendants().OfType<IInvocationOperation>().First();
+
+WriteLine($"The method is {invocationOp.TargetMethod.Name} accepting {invocationOp.TargetMethod.Parameters.Length} parameter");
+WriteLine($"The first parameter is {invocationOp.TargetMethod.Parameters[0].Name} of type {invocationOp.TargetMethod.Parameters[0].Type}");
