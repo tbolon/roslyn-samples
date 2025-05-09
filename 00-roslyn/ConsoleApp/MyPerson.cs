@@ -15,6 +15,7 @@
         public override int GetHashCode() => Id.GetHashCode() ^ Name.GetHashCode();
 
         public static bool operator ==(MyPerson left, MyPerson right) => left.Equals(right);
+
         public static bool operator !=(MyPerson left, MyPerson right) => left.Equals(right);
     }
 }

@@ -4,6 +4,10 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Operations;
 using static System.Console;
 
+// ************************************
+// Exemple d'utilisation du compilateur Roslyn
+// ************************************
+
 // ***********************
 //
 // Syntax Model

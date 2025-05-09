@@ -17,9 +17,10 @@ namespace MyFirstGenerator
 
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
-            context.RegisterPostInitializationOutput(ctx => ctx.AddSource("MyFirstGenerator.BasicAttribute.g.cs", SourceText.From(Attribute, Encoding.UTF8)));
+            context.RegisterPostInitializationOutput(ctx =>
+                ctx.AddSource("MyFirstGenerator.BasicAttribute.g.cs", SourceText.From(Attribute, Encoding.UTF8)));
 
-            IncrementalValuesProvider<EqualsOperatorClassDetails?> classesToGenerate =context
+            IncrementalValuesProvider<EqualsOperatorClassDetails?> classesToGenerate = context
                 .SyntaxProvider
                 .ForAttributeWithMetadataName(
                     "MyFirstGenerator.EqualsOperatorAttribute",
@@ -27,8 +28,7 @@ namespace MyFirstGenerator
                     transform: static (ctx, _) => GetSemanticTargetForGeneration(ctx))
                 .WithTrackingName("EqualsOperatorClassDetails");
 
-            context.RegisterSourceOutput(classesToGenerate,
-                static (spc, source) => Execute(source, spc));
+            context.RegisterSourceOutput(classesToGenerate, static (spc, source) => Execute(source, spc));
         }
 
         private static void Execute(EqualsOperatorClassDetails? classDetails, SourceProductionContext ctx)
@@ -60,7 +60,7 @@ namespace {classDetails.Value.Namespace}
             if (classNode == null)
                 return null;
 
-            // code très très simple qui suppose beaucoup (trop) de choses...
+            // code très très simple qui suppose beaucoup (trop) de choses sur la structure du fichier...
             var nsNode = ctx.TargetNode.Parent as NamespaceDeclarationSyntax;
             if (nsNode == null)
                 return null;
