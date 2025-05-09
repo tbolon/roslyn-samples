@@ -2,16 +2,21 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Operations;
+using System.Text;
 using static System.Console;
 
 // ************************************
 // ✨ Exemple d'utilisation du compilateur Roslyn
 // ************************************
 
+OutputEncoding = Encoding.UTF8;
+
 // ***********************
-// 👉 Syntax Model
+// 👉 Syntax Model (language specific)
 // https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/get-started/syntax-analysis
 //
+
+WriteLine("👉 Syntax Model (language specific)");
 
 // code source
 const string programText =
@@ -36,44 +41,46 @@ SyntaxTree tree = CSharpSyntaxTree.ParseText(programText);
 CompilationUnitSyntax root = tree.GetCompilationUnitRoot();
 
 // root node
-WriteLine($"The tree is a {root.Kind()} node.");
-WriteLine($"The tree has {root.Members.Count} elements in it.");
-WriteLine($"The tree has {root.Usings.Count} using directives. They are:");
+WriteLine($"🌳 The tree is a {root.Kind()} node.");
+WriteLine($"   The tree has {root.Members.Count} elements in it.");
+WriteLine($"   The tree has {root.Usings.Count} using directives. They are:");
 foreach (UsingDirectiveSyntax element in root.Usings)
-    WriteLine($"\t{element.Name}");
+    WriteLine($"   - {element.Name}");
 
 // namespace
 MemberDeclarationSyntax firstMember = root.Members[0];
-WriteLine($"The first member is a {firstMember.Kind()}.");
+WriteLine($"ℹ️ The first member is a {firstMember.Kind()}.");
 var helloWorldDeclaration = (NamespaceDeclarationSyntax)firstMember;
 
-WriteLine($"There are {helloWorldDeclaration.Members.Count} members declared in this namespace.");
-WriteLine($"The first member is a {helloWorldDeclaration.Members[0].Kind()}.");
+WriteLine($"ℹ️ There are {helloWorldDeclaration.Members.Count} members declared in this namespace.");
+WriteLine($"   The first member is a {helloWorldDeclaration.Members[0].Kind()}.");
 
 // program class
 var programDeclaration = (ClassDeclarationSyntax)helloWorldDeclaration.Members[0];
-WriteLine($"There are {programDeclaration.Members.Count} members declared in the {programDeclaration.Identifier} class.");
-WriteLine($"The first member is a {programDeclaration.Members[0].Kind()}.");
+WriteLine($"ℹ️ There are {programDeclaration.Members.Count} members declared in the {programDeclaration.Identifier} class.");
+WriteLine($"   The first member is a {programDeclaration.Members[0].Kind()}.");
 
 var mainDeclaration = (MethodDeclarationSyntax)programDeclaration.Members[0];
 
-WriteLine($"The return type of the {mainDeclaration.Identifier} method is {mainDeclaration.ReturnType}.");
-WriteLine($"The method has {mainDeclaration.ParameterList.Parameters.Count} parameters.");
+WriteLine($"ℹ️ The return type of the {mainDeclaration.Identifier} method is {mainDeclaration.ReturnType}.");
+WriteLine($"   The method has {mainDeclaration.ParameterList.Parameters.Count} parameters.");
 foreach (ParameterSyntax item in mainDeclaration.ParameterList.Parameters)
-    WriteLine($"The type of the {item.Identifier} parameter is {item.Type}.");
-WriteLine($"The body text of the {mainDeclaration.Identifier} method follows:");
+    WriteLine($"   - The type of the {item.Identifier} parameter is {item.Type}.");
+WriteLine($"ℹ️ The body text of the {mainDeclaration.Identifier} method follows:");
 WriteLine(mainDeclaration.Body?.ToFullString());
 
 // args parameter
 var argsParameter = mainDeclaration.ParameterList.Parameters[0];
 
-WriteLine("Press any key...");
+WriteLine("⌛ Press any key...");
 ReadKey();
 
 // ***********************
 // 👉 Semantic model
 // https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/get-started/semantic-analysis
 //
+
+WriteLine("👉 Semantic model");
 
 // create a compilation object (necessary for the semantic model)
 var compilation = CSharpCompilation
@@ -84,6 +91,12 @@ var compilation = CSharpCompilation
 
 // get the semantic model
 var model = compilation.GetSemanticModel(tree);
+
+// get the symbol associated to a syntax node
+IMethodSymbol? methodSymbol = model.GetDeclaredSymbol(mainDeclaration) as IMethodSymbol;
+
+// gets the (first) syntax node associated with the symbol
+SyntaxNode mainDeclarationBack = methodSymbol!.DeclaringSyntaxReferences[0].GetSyntax();
 
 // find the "Hello World!" literal in the main method
 LiteralExpressionSyntax helloWorldString = mainDeclaration.DescendantNodes().OfType<LiteralExpressionSyntax>().Single();
@@ -109,16 +122,18 @@ var distinctMethods = publicStringReturningMethods?.Select(m => m.Name).Distinct
 WriteLine($"Methods from the type {typeSymbol?.Name} used as a parameter");
 foreach (string name in distinctMethods ?? Enumerable.Empty<string>())
 {
-    WriteLine(name);
+    WriteLine($"- {name}");
 }
 
-WriteLine("Press any key...");
+WriteLine("⌛ Press any key...");
 ReadKey();
 
 // ***********************
 // 👉 IOperation Syntax Model (language agnostic)
 // Useful in analyzers
 //
+
+WriteLine("👉 IOperation Syntax Model (language agnostic)");
 
 // main method IOperation
 var methodBodyOp = (IMethodBodyOperation?)model.GetOperation(mainDeclaration);
