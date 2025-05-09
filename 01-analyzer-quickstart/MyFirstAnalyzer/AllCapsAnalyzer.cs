@@ -8,8 +8,10 @@ namespace MyFirstAnalyzer
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class AllCapsAnalyzer : DiagnosticAnalyzer
     {
+        // 👇 identifiant unique (utile pour configurer la règle)
         public const string DiagnosticId = "MF01";
 
+        // 👇 déclaration de la "règle" qui sera rapportée
         private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
             DiagnosticId,
             title: @"Type name contains lowercase letters",
@@ -17,13 +19,16 @@ namespace MyFirstAnalyzer
             @"Naming",
             DiagnosticSeverity.Warning, isEnabledByDefault: true, description: @"Type names should be all uppercase.");
 
+        // 👇 liste des règles rapportées par cet analyseur (1 seule ici)
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
         public override void Initialize(AnalysisContext context)
         {
+            // 👇 optimisations
             context.EnableConcurrentExecution();
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 
+            // 👇 on se branche sur l'analyse des symboles "Type nommé" (classes, variables, etc.)
             context.RegisterSymbolAction(AnalyzeSymbol, SymbolKind.NamedType);            
         }
 

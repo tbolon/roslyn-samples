@@ -5,15 +5,15 @@ using Microsoft.CodeAnalysis.Operations;
 using static System.Console;
 
 // ************************************
-// Exemple d'utilisation du compilateur Roslyn
+// ✨ Exemple d'utilisation du compilateur Roslyn
 // ************************************
 
 // ***********************
-//
-// Syntax Model
+// 👉 Syntax Model
 // https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/get-started/syntax-analysis
 //
 
+// code source
 const string programText =
 @"using System;
 using System.Collections;
@@ -31,6 +31,7 @@ namespace HelloWorld
     }
 }";
 
+// parsing
 SyntaxTree tree = CSharpSyntaxTree.ParseText(programText);
 CompilationUnitSyntax root = tree.GetCompilationUnitRoot();
 
@@ -70,8 +71,7 @@ WriteLine("Press any key...");
 ReadKey();
 
 // ***********************
-//
-// Semantic model
+// 👉 Semantic model
 // https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/get-started/semantic-analysis
 //
 
@@ -116,8 +116,7 @@ WriteLine("Press any key...");
 ReadKey();
 
 // ***********************
-//
-// IOperation Syntax Model (language agnostic)
+// 👉 IOperation Syntax Model (language agnostic)
 // Useful in analyzers
 //
 

@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using MyFirstGenerator.Machin;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MyFirstGenerator
 {
@@ -41,9 +42,9 @@ namespace MyNamespace
             return Verify(driver);
         }
 
-        static GeneratorDriver BuildDriver(string? source) => BuildDriver(source, out _, out _);
+        static GeneratorDriver BuildDriver([StringSyntax("C#-Test")] string? source) => BuildDriver(source, out _, out _);
 
-        static GeneratorDriver BuildDriver(string? source, out Compilation outputCompilation, out ImmutableArray<Diagnostic> diagnostics)
+        static GeneratorDriver BuildDriver([StringSyntax("C#-Test")] string? source, out Compilation outputCompilation, out ImmutableArray<Diagnostic> diagnostics)
         {
             IEnumerable<SyntaxTree>? syntaxTrees = null;
             if (source != null)

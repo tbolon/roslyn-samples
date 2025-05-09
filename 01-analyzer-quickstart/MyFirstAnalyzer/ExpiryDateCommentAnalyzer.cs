@@ -29,6 +29,7 @@ namespace MyFirstAnalyzer
             context.EnableConcurrentExecution();
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 
+            // 👇 on se branche sur des noeuds de type "Déclaration de méthode"
             context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.MethodDeclaration);
         }
 
