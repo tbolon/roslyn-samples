@@ -117,7 +117,6 @@ ReadKey();
 // Useful in analyzers
 //
 
-
 // main method IOperation
 var methodBodyOp = (IMethodBodyOperation?)model.GetOperation(mainDeclaration);
 var blockOp = methodBodyOp!.BlockBody;
