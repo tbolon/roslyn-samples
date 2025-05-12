@@ -1,10 +1,15 @@
-﻿namespace HelloWorld
+﻿using System;
+using System.Collections;
+using System.Linq;
+using System.Text;
+
+namespace HelloWorld
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(42);
+            Console.WriteLine("Hello World!");
         }
     }
 }

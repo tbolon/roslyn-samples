@@ -11,6 +11,8 @@ using static System.Console;
 
 OutputEncoding = Encoding.UTF8;
 
+#region Syntax Model
+
 // ***********************
 // 👉 Syntax Model (language specific)
 // https://learn.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/get-started/syntax-analysis
@@ -50,30 +52,34 @@ foreach (UsingDirectiveSyntax element in root.Usings)
 // namespace
 MemberDeclarationSyntax firstMember = root.Members[0];
 WriteLine($"ℹ️ The first member is a {firstMember.Kind()}.");
-var helloWorldDeclaration = (NamespaceDeclarationSyntax)firstMember;
+var helloWorldNSDeclaration = (NamespaceDeclarationSyntax)firstMember;
 
-WriteLine($"ℹ️ There are {helloWorldDeclaration.Members.Count} members declared in this namespace.");
-WriteLine($"   The first member is a {helloWorldDeclaration.Members[0].Kind()}.");
+WriteLine($"ℹ️ There are {helloWorldNSDeclaration.Members.Count} members declared in the {helloWorldNSDeclaration.Name} namespace.");
+WriteLine($"   The first member is a {helloWorldNSDeclaration.Members[0].Kind()}.");
 
 // program class
-var programDeclaration = (ClassDeclarationSyntax)helloWorldDeclaration.Members[0];
+var programDeclaration = (ClassDeclarationSyntax)helloWorldNSDeclaration.Members[0];
 WriteLine($"ℹ️ There are {programDeclaration.Members.Count} members declared in the {programDeclaration.Identifier} class.");
 WriteLine($"   The first member is a {programDeclaration.Members[0].Kind()}.");
 
-var mainDeclaration = (MethodDeclarationSyntax)programDeclaration.Members[0];
-
-WriteLine($"ℹ️ The return type of the {mainDeclaration.Identifier} method is {mainDeclaration.ReturnType}.");
-WriteLine($"   The method has {mainDeclaration.ParameterList.Parameters.Count} parameters.");
-foreach (ParameterSyntax item in mainDeclaration.ParameterList.Parameters)
+// main method
+var mainDeclarationNode = (MethodDeclarationSyntax)programDeclaration.Members[0];
+WriteLine($"ℹ️ The return type of the {mainDeclarationNode.Identifier} method is {mainDeclarationNode.ReturnType}.");
+WriteLine($"   The method has {mainDeclarationNode.ParameterList.Parameters.Count} parameters.");
+foreach (ParameterSyntax item in mainDeclarationNode.ParameterList.Parameters)
     WriteLine($"   - The type of the {item.Identifier} parameter is {item.Type}.");
-WriteLine($"ℹ️ The body text of the {mainDeclaration.Identifier} method follows:");
-WriteLine(mainDeclaration.Body?.ToFullString());
+WriteLine($"ℹ️ The body text of the {mainDeclarationNode.Identifier} method follows:");
+WriteLine(mainDeclarationNode.Body?.ToFullString());
 
 // args parameter
-var argsParameter = mainDeclaration.ParameterList.Parameters[0];
+var argsParameter = mainDeclarationNode.ParameterList.Parameters[0];
 
 WriteLine("⌛ Press any key...");
 ReadKey();
+
+#endregion
+
+#region Semantic Model
 
 // ***********************
 // 👉 Semantic model
@@ -93,13 +99,13 @@ var compilation = CSharpCompilation
 var model = compilation.GetSemanticModel(tree);
 
 // get the symbol associated to a syntax node
-IMethodSymbol? methodSymbol = model.GetDeclaredSymbol(mainDeclaration) as IMethodSymbol;
+IMethodSymbol methodSymbol = model.GetDeclaredSymbol(mainDeclarationNode)! as IMethodSymbol;
 
 // gets the (first) syntax node associated with the symbol
-SyntaxNode mainDeclarationBack = methodSymbol!.DeclaringSyntaxReferences[0].GetSyntax();
+SyntaxNode mainDeclarationBack = methodSymbol.DeclaringSyntaxReferences[0].GetSyntax();
 
 // find the "Hello World!" literal in the main method
-LiteralExpressionSyntax helloWorldString = mainDeclaration.DescendantNodes().OfType<LiteralExpressionSyntax>().Single();
+LiteralExpressionSyntax helloWorldString = mainDeclarationNode.DescendantNodes().OfType<LiteralExpressionSyntax>().Single();
 TypeInfo literalInfo = model.GetTypeInfo(helloWorldString);
 
 // get the string type
@@ -128,6 +134,10 @@ foreach (string name in distinctMethods ?? Enumerable.Empty<string>())
 WriteLine("⌛ Press any key...");
 ReadKey();
 
+#endregion
+
+#region IOperation Syntax Model
+
 // ***********************
 // 👉 IOperation Syntax Model (language agnostic)
 // Useful in analyzers
@@ -136,7 +146,7 @@ ReadKey();
 WriteLine("👉 IOperation Syntax Model (language agnostic)");
 
 // main method IOperation
-var methodBodyOp = (IMethodBodyOperation?)model.GetOperation(mainDeclaration);
+var methodBodyOp = (IMethodBodyOperation?)model.GetOperation(mainDeclarationNode);
 var blockOp = methodBodyOp!.BlockBody;
 
 WriteLine($"The main method block body has {blockOp?.Operations.Length} operations.");
@@ -144,3 +154,5 @@ var invocationOp = blockOp.Descendants().OfType<IInvocationOperation>().First();
 
 WriteLine($"The method is {invocationOp.TargetMethod.Name} accepting {invocationOp.TargetMethod.Parameters.Length} parameter");
 WriteLine($"The first parameter is {invocationOp.TargetMethod.Parameters[0].Name} of type {invocationOp.TargetMethod.Parameters[0].Type}");
+
+#endregion
