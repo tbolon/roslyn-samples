@@ -22,7 +22,8 @@ namespace MyFirstAnalyzer
             description: @"Type names should be all uppercase.");
 
         // 👇 liste des règles rapportées par cet analyseur (1 seule ici)
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
+            => ImmutableArray.Create(Rule);
 
         public override void Initialize(AnalysisContext context)
         {
