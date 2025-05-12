@@ -17,7 +17,9 @@ namespace MyFirstAnalyzer
             title: @"Type name contains lowercase letters",
             messageFormat: @"Type name '{0}' contains lowercase letters",
             @"Naming",
-            DiagnosticSeverity.Warning, isEnabledByDefault: true, description: @"Type names should be all uppercase.");
+            DiagnosticSeverity.Warning,
+            isEnabledByDefault: true,
+            description: @"Type names should be all uppercase.");
 
         // 👇 liste des règles rapportées par cet analyseur (1 seule ici)
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

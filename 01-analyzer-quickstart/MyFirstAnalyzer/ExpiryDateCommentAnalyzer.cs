@@ -17,10 +17,12 @@ namespace MyFirstAnalyzer
 
         private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(
             DiagnosticId,
-            title: @"Date de péremption dépassée",
+            title: @"Date d'expiration dépassée",
             messageFormat: @"La date d'expiration de ce code est dépassée depuis le {0}",
             @"Compiler",
-            DiagnosticSeverity.Warning, isEnabledByDefault: true, description: @"Ce code devrait être supprimé, sa date d'expiration est dépassée.");
+            DiagnosticSeverity.Warning,
+            isEnabledByDefault: true,
+            description: @"Ce code devrait être supprimé, sa date d'expiration est dépassée.");
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
@@ -43,23 +45,19 @@ namespace MyFirstAnalyzer
                 return;
             }
 
-            // single-line comment ?
-            var comment = x.GetLeadingTrivia().LastOrDefault(t => t.IsKind(SyntaxKind.SingleLineCommentTrivia));
+            // single-line comment with prefix ?
+            var comment = x.GetLeadingTrivia()
+                .LastOrDefault(t =>
+                    t.IsKind(SyntaxKind.SingleLineCommentTrivia)
+                    && t.ToFullString().StartsWith("// obsolete:")
+                );
             if (comment == null)
             {
                 return;
             }
 
-            // préfixe reconnu ?
-            var text = comment.ToFullString();
-            if (!text.StartsWith("// obsolete:"))
-            {
-                return;
-            }
-
-
             // format valide ?
-            var m = Regex.Match(text, @"// obsolete:\s*((\d{2})/(\d{2})/(\d{4}))");
+            var m = Regex.Match(comment.ToFullString(), @"// obsolete:\s*((\d{2})/(\d{2})/(\d{4}))");
             if (!m.Success || !DateTime.TryParseExact(m.Groups[1].Value, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var expiry))
             {
                 return;
@@ -71,9 +69,11 @@ namespace MyFirstAnalyzer
                 return;
             }
 
-            // emplacement de la méthode
-            var identifier = x.ChildTokens().FirstOrDefault(t => t.IsKind(SyntaxKind.IdentifierToken));
-            var loc = identifier.GetLocation() ?? x.GetLocation();
+            // emplacement de la méthode, on recherche le nom de la méthode
+            var loc = x
+                .ChildTokens()
+                .FirstOrDefault(t => t.IsKind(SyntaxKind.IdentifierToken))
+                .GetLocation() ?? x.GetLocation();
 
             // erreur de diagnostic
             var diagnostic = Diagnostic.Create(Rule, loc, messageArgs: expiry.ToString("dd/MM/yyyy"));
