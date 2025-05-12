@@ -17,8 +17,8 @@
 
         // 👇 permet d'utiliser == pour utiliser person1.Equals(person2)
         // par défaut c'est une égalité par référence (pointeur) qui est utilisée
-        public static bool operator ==(MyPerson left, MyPerson right) => left.Equals(right);
+        public static bool operator ==(MyPerson left, MyPerson right) => left?.Equals(right) == true;
 
-        public static bool operator !=(MyPerson left, MyPerson right) => left.Equals(right);
+        public static bool operator !=(MyPerson left, MyPerson right) => !(left == right);
     }
 }

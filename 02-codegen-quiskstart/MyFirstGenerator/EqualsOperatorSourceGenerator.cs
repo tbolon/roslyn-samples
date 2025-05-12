@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System.Text;
 
-namespace MyFirstGenerator.Machin
+namespace MyFirstGenerator
 {
     [Generator]
     public class EqualsOperatorSourceGenerator : IIncrementalGenerator
@@ -43,8 +43,8 @@ namespace {classDetails.Value.Namespace}
     partial class {classDetails.Value.Name}
     {{");
                 sb.Append($@"
-        public static bool operator==({classDetails.Value.Name} left, {classDetails.Value.Name} right) => left.Equals(right);
-        public static bool operator!=({classDetails.Value.Name} left, {classDetails.Value.Name} right) => !left.Equals(right);");
+        public static bool operator==({classDetails.Value.Name} left, {classDetails.Value.Name} right) => left?.Equals(right) == true;
+        public static bool operator!=({classDetails.Value.Name} left, {classDetails.Value.Name} right) => !(left == right);");
 
                 sb.Append(@"
     }

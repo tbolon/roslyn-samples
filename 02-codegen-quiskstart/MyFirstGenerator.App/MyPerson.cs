@@ -1,6 +1,6 @@
 ﻿namespace MyApp
 {
-    //[MyFirstGenerator.EqualsOperator]
+    [MyFirstGenerator.EqualsOperator]
     public partial class MyPerson
     {
         public int Id { get; set; }
