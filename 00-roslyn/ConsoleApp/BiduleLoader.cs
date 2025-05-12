@@ -10,7 +10,9 @@
             if (id == string.Empty)
                 return null;
 
-            return new MyPerson { };
+            var person = new MyPerson { };
+
+            return person;
         }
     }
 }
